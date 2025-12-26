@@ -6,10 +6,7 @@ from reportlab.lib.units import mm
 import os
 from openai import OpenAI
 
-# =====================
-# OpenAI クライアント
-# =====================
-client = OpenAI()  # OPENAI_API_KEY は環境変数で設定
+client = OpenAI()  
 
 plt.rcParams["font.family"] = "Hiragino Sans"
 
@@ -22,9 +19,6 @@ os.makedirs(PDF_DIR, exist_ok=True)
 
 monthly_totals = []
 
-# =====================
-# AI：月次売上推移の文章生成
-# =====================
 def generate_trend_analysis_with_ai(summary, monthly_df, product_sales):
     monthly_sales = monthly_df.set_index("month")["total_sales"].to_dict()
 
@@ -58,9 +52,6 @@ def generate_trend_analysis_with_ai(summary, monthly_df, product_sales):
 
     return response.choices[0].message.content.strip()
 
-# =====================
-# CSVごとの既存処理
-# =====================
 for csv_file in sorted(os.listdir(CSV_DIR)):
     if not csv_file.endswith(".csv"):
         continue
@@ -83,7 +74,6 @@ for csv_file in sorted(os.listdir(CSV_DIR)):
 
     base_name = csv_file.replace(".csv", "")
 
-    # 商品別棒グラフ（既存）
     plt.figure()
     product_sales.plot(kind="bar")
     plt.title("Product Sales")
@@ -92,7 +82,6 @@ for csv_file in sorted(os.listdir(CSV_DIR)):
     plt.savefig(product_png)
     plt.close()
 
-    # PDF（既存）
     pdf_path = os.path.join(PDF_DIR, f"{base_name}_report.pdf")
     c = canvas.Canvas(pdf_path, pagesize=A4)
     width, height = A4
@@ -117,16 +106,12 @@ for csv_file in sorted(os.listdir(CSV_DIR)):
     c.showPage()
     c.save()
 
-    # 月次集計（既存）
     month = df["date"].dt.to_period("M")[0]
     monthly_totals.append({
         "month": month.to_timestamp(),
         "total_sales": summary["total_sales"]
     })
 
-# =====================
-# 月次折れ線グラフ（既存）
-# =====================
 monthly_df = pd.DataFrame(monthly_totals).sort_values("month")
 
 plt.figure()
@@ -141,9 +126,6 @@ trend_png = os.path.join(PNG_DIR, "monthly_sales_trend.png")
 plt.savefig(trend_png)
 plt.close()
 
-# =====================
-# ★ AI分析文を含む最終レポート（完成形）
-# =====================
 ai_trend_text = generate_trend_analysis_with_ai(
     summary,
     monthly_df,
