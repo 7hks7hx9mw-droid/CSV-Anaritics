@@ -1,0 +1,6 @@
+date,order_id,customer_id,product,category,unit_price,quantity,sales_amount,channel
+2025-02-05,ORD021,C001,商品A,食品,1200,2,2400,EC
+2025-02-10,ORD022,C002,商品B,日用品,800,2,1600,店舗
+2025-02-15,ORD023,C003,商品C,食品,1500,2,3000,EC
+2025-02-20,ORD024,C001,商品A,食品,1200,3,3600,店舗
+2025-02-25,ORD025,C004,商品D,雑貨,2000,2,4000,EC
